@@ -1,92 +1,35 @@
-// import React, { useRef, useState } from "react";
-
-// export default function App() {
-//   const canvasRef = useRef(null);
-//   const [shape, setShape] = useState("");
-//   const [color, setColor] = useState("white");
-//   const [size, setSize] = useState("");
-//   function drawShape(event) {
-//     const canvas = canvasRef.current;
-//     const rect = canvas.getBoundingClientRect();
-//     const x = event.clientX - rect.left;
-//     const y = event.clientY - rect.top;
-
-//     const ctx = canvas.getContext("2d");
-//     ctx.fillStyle = color;
-//     ctx.strokeStyle = "black";
-
-//     if (shape === "circle") {
-//       ctx.beginPath();
-//       ctx.arc(x, y, 30, 0, 2 * Math.PI);
-//       ctx.fill();
-//       ctx.stroke();
-//     }
-
-//     if (shape === "square") {
-//       ctx.fillRect(x - 20, y - 20, 60, 60);
-//       ctx.strokeRect(x - 20, y - 20, 40, 40);
-//     }
-
-//     if (shape === "triangle") {
-//       ctx.beginPath();
-//       ctx.moveTo(x, y - 30);
-//       ctx.lineTo(x - 30, y + 20);
-//       ctx.lineTo(x + 30, y + 20);
-//       ctx.closePath();
-//       ctx.fill();
-//       ctx.stroke();
-//     }
-//   }
-
-//   return (
-//     <div>
-//       <canvas
-//         ref={canvasRef}
-//         width={400}
-//         height={200}
-//         style={{ border: "1px solid black" }}
-//         onClick={drawShape}
-//       />
-//       <button
-//         onClick={() => {
-//           setShape("circle");
-//         }}
-//       >
-//         O
-//       </button>
-//       <button
-//         onClick={() => {
-//           setShape("square");
-//         }}
-//       >
-//         ם
-//       </button>
-//       <button
-//         onClick={() => {
-//           setShape("triangle");
-//         }}
-//       >
-//         ^
-//       </button>
-//     </div>
-//   );
-// }
-
 import React, { useRef, useState, useEffect } from "react";
 import { useShape } from "./dataContext";
 import ColorZone from "./colorZone";
 import SizeZone from "./SizeZone";
 import ShapeZone from "./ShapeZone";
 import "./style.css";
+import DeleteZone from "./deleteZone";
+import { Card } from "@mui/material";
 export default function CanvasWithShapes() {
   const canvasRef = useRef(null);
   const [mousePos, setMousePos] = useState(null);
   const [shapes, setShapes] = useState([]);
-  const { shape, setShape, size, color } = useShape();
+  const {
+    shape,
+    setShape,
+    size,
+    setSize,
+    isErasing,
+    setIsErasing,
+    color,
+    setColor,
+  } = useShape();
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [shadowColor, setShadowColor] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth * 0.75 * 0.8;
+    canvas.height = window.innerHeight * 0.8;
+    // canvas.width = canvas.offsetWidth;
+    // canvas.height = canvas.offsetHeight;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -111,6 +54,17 @@ export default function CanvasWithShapes() {
 
     if (type === "rect") {
       ctx.fillRect(x - size / 2, y - size / 2, size, size);
+    } else if (type === "rectangle") {
+      ctx.fillRect(
+        x - (size * 1.5) / 2,
+        y - (size * 0.7) / 2,
+        size * 1.5,
+        size * 0.7
+      );
+    } else if (type === "ellipse") {
+      ctx.beginPath();
+      ctx.ellipse(x, y, (size * 1.5) / 2, (size * 0.7) / 2, 0, 0, 2 * Math.PI);
+      ctx.fill();
     } else if (type === "circle") {
       ctx.beginPath();
       ctx.arc(x, y, size / 2, 0, 2 * Math.PI);
@@ -122,9 +76,32 @@ export default function CanvasWithShapes() {
       ctx.lineTo(x + size / 2, y + size / 2);
       ctx.closePath();
       ctx.fill();
+    } else if (type === "pentagon") {
+      const sides = 5;
+      const radius = size / 2;
+      ctx.beginPath();
+      for (let i = 0; i < sides; i++) {
+        const angle = (i / sides) * 2 * Math.PI - Math.PI / 2;
+        const px = x + radius * Math.cos(angle);
+        const py = y + radius * Math.sin(angle);
+        if (i === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.closePath();
+      ctx.fill();
     }
 
     ctx.restore();
+  };
+  const handleMouseDown = () => {
+    setIsMouseDown(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
   };
 
   const handleMouseMove = (e) => {
@@ -133,30 +110,73 @@ export default function CanvasWithShapes() {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     });
+    if (isErasing && isMouseDown) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+
+      const eraserSize = 50;
+      ctx.clearRect(
+        mousePos.x - eraserSize / 2,
+        mousePos.y - eraserSize / 2,
+        eraserSize,
+        eraserSize
+      );
+      ctx.fillStyle = "white";
+      ctx.fillRect(
+        mousePos.x - eraserSize / 2,
+        mousePos.y - eraserSize / 2,
+        eraserSize,
+        eraserSize
+      );
+    }
   };
 
   const handleClick = () => {
-    if (mousePos) {
-      setShapes([...shapes, { x: mousePos.x, y: mousePos.y, type: shape,color:color }]);
+    if (shape != "") {
+      if (mousePos) {
+        setShapes([
+          ...shapes,
+          { x: mousePos.x, y: mousePos.y, type: shape, color: color },
+        ]);
+        if (isErasing == false) {
+          setShadowColor(!shadowColor);
+          setColor("white");
+          setShape("");
+          setSize("");
+        }
+      }
     }
   };
 
   return (
-    <div id="app" style={{ textAlign: "center" }}>
+    <div id="app">
       <div id="chooseDetails">
-      <SizeZone id="sizeDetails" />
-
-       <div id="colorDetails"> <ColorZone /></div> 
-        <ShapeZone id="shapeDetails" />
+        <Card>
+          <SizeZone id="sizeDetails" />
+          <div id="colorDetails">
+            <ColorZone />
+          </div>
+          <ShapeZone id="shapeDetails" />
+          <DeleteZone />
+        </Card>
       </div>
-      <canvas
-        ref={canvasRef}
-        width={500}
-        height={500}
-        onMouseMove={handleMouseMove}
-        onClick={handleClick}
-        style={{ border: "1px solid black", cursor: "crosshair" }}
-      />
+      <div id="leftSide">
+        <h1>Draw With Me</h1>
+        <canvas
+          id="canvas"
+          ref={canvasRef}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onClick={handleClick}
+          style={{
+            boxShadow: shadowColor
+              ? `0px 0px 15px 0px green`
+              : `0px 0px 15px 0px red`,
+          }}
+        />
+      </div>
     </div>
   );
 }
