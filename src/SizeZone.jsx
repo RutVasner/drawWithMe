@@ -1,15 +1,16 @@
 import React from 'react'
 import { useShape } from './dataContext';
+import { Button } from '@mui/material';
 
 export default function SizeZone() {
     const { shape, size,setSize, color } = useShape();
 
   return (
-    <div>
+    <div id="sizeZone">
 
-        <button onClick={()=>{setSize("big")}}>BIG</button>
-        <button onClick={()=>{setSize("medium")}}>MEDIUM</button>
-        <button onClick={()=>{setSize("small")}}>SMALL</button>
+        <Button variant="outlined" onClick={()=>{setSize(0.5)}}>קטן</Button>
+        <Button variant="outlined" onClick={()=>{setSize(1)}}>רגיל</Button>
+        <Button variant="outlined" onClick={()=>{setSize(1.5)}}>גדול</Button>
     </div>
   )
 }

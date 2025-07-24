@@ -1,65 +1,72 @@
 #app {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #chooseDetails {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    gap: 20px;
-    padding: 10px;
-    width: 30%;
-    height: 95vh;
-    margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  width: 30%;
+  height: 95vh;
+  margin-inline: auto;
 }
 #chooseDetails .MuiCard-root {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 #shapeDetails,
 #sizeDetails,
 #colorDetails {
-    padding-top: 15px;
-    margin-top: 15px;
+  padding-top: 15px;
+  margin-top: 15px;
 }
 
 #leftSide {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 75%;
-    height: 100vh;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 75%;
+  height: 100vh;
+  box-sizing: border-box;
 }
-
-#canvas {
-    width: 80%;
-    height: 80%;
+#previewCanvas{
     border: 1px solid black;
-    cursor: crosshair;
-    display: block;
-    margin: 0 auto;
-    /* box-shadow: 0px 0px 15px 0px green; */
 
+}
+#canvas {
+  width: 80%;
+  height: 80%;
+  border: 1px solid black;
+  cursor: crosshair;
+  display: block;
+  margin: 0 auto;
+  /* box-shadow: 0px 0px 15px 0px green; */
 }
 
 #shapesBtn Button {
-    margin: 5px;
-    width: 30%;
+  margin: 5px;
+  width: 30%;
 }
-body{
-    margin: 0px !important;
+body {
+  margin: 0px !important;
+}
+#sizeZone {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
 }

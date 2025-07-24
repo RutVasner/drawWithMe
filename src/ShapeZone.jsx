@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useShape } from "./dataContext";
 import HexagonIcon from "@mui/icons-material/Hexagon";
 import SquareIcon from "@mui/icons-material/Square";
@@ -24,31 +24,33 @@ function EllipseIcon(props) {
   );
 }
 export default function ShapeZone() {
-  const { shape, setShape, size, color } = useShape();
-
+  const { shape, setShape, size, color, setColor } = useShape();
+  useEffect(() => {
+    setColor("black");
+  }, [shape]);
   return (
     <div
       id="shapesBtn"
       style={{ marginBottom: "10px", display: "flex", flexWrap: "wrap" }}
     >
-      <Button variant="outlined" onClick={() => setShape("rect")}>
-        <SquareIcon/>
+      <Button variant="outlined" onClick={() => setShape("squer")}>
+        <SquareIcon />
       </Button>
       <Button variant="outlined" onClick={() => setShape("circle")}>
-        <CircleIcon/>
+        <CircleIcon />
       </Button>
       <Button variant="outlined" onClick={() => setShape("triangle")}>
-        <ChangeHistoryIcon/>
+        <ChangeHistoryIcon />
       </Button>
       <Button variant="outlined" onClick={() => setShape("ellipse")}>
         {" "}
         <EllipseIcon />
       </Button>
       <Button variant="outlined" onClick={() => setShape("pentagon")}>
-        <PentagonIcon/>
+        <PentagonIcon />
       </Button>
       <Button variant="outlined" onClick={() => setShape("rectangle")}>
-        <RectangleIcon/>
+        <RectangleIcon />
       </Button>
     </div>
   );

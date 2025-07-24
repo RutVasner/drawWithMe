@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SketchPicker } from "react-color";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useShape } from "./dataContext";
 
 export default function ColorZone() {
@@ -12,21 +13,42 @@ export default function ColorZone() {
       <Button variant="outlined" onClick={() => setShowPicker(!showPicker)}>
         בחר צבע
       </Button>
+
       {showPicker && (
         <Box
           sx={{
             position: "absolute",
             zIndex: 10,
             top: "50px",
+            boxShadow: 3,
+            borderRadius: 1,
+            backgroundColor: "white",
           }}
         >
+          {/* כפתור סגירה קטן בפינה */}
+          <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
+            <IconButton size="small" >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Box>
+
           <SketchPicker
             color={color}
-            onChangeComplete={(newColor) =>{ setColor(newColor.hex);setShowPicker(false)}}
+            onChange={(newColor) => setColor(newColor.hex)}
           />
         </Box>
       )}
-      <Box sx={{ mt: 2, width: 100, height: 50, backgroundColor: color }} />
+
+      {/* תצוגה של הצבע הנוכחי */}
+      <Box
+        sx={{
+          mt: 2,
+          width: 100,
+          height: 50,
+          backgroundColor: color,
+          border: "1px solid #ccc",
+        }}
+      />
     </Box>
   );
 }
