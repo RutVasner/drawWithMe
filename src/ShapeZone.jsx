@@ -26,7 +26,7 @@ function EllipseIcon(props) {
 export default function ShapeZone() {
   const { shape, setShape, size, color, setColor } = useShape();
   useEffect(() => {
-    setColor("black");
+    // setColor("black");
   }, [shape]);
   return (
     <div

@@ -39,15 +39,7 @@ export default function CanvasWithShapes() {
     if (shapes.length > 0) {
       shapes.map((item) => {
         debugger;
-        drawShape(
-          ctx,
-          item.type,
-          item.x,
-          item.y,
-          item.color,
-          item.size,
-          1
-        );
+        drawShape(ctx, item.type, item.x, item.y, item.color, item.size, 1);
       });
     }
 
@@ -129,7 +121,13 @@ export default function CanvasWithShapes() {
       if (mousePos) {
         setShapes([
           ...shapes,
-          { x: mousePos.x, y: mousePos.y, type: shape, color: color ,size:size},
+          {
+            x: mousePos.x,
+            y: mousePos.y,
+            type: shape,
+            color: color,
+            size: size,
+          },
         ]);
         if (isErasing == false) {
           setShadowColor(!shadowColor);
@@ -145,12 +143,10 @@ export default function CanvasWithShapes() {
     <div id="app">
       <div id="chooseDetails">
         <Card>
-          <PreviewZone />
-          <SizeZone id="sizeDetails" />
-          <div id="colorDetails">
-            <ColorZone />
-          </div>
+          <PreviewZone id="previewZone" />
           <ShapeZone id="shapeDetails" />
+          <SizeZone id="sizeDetails" />
+          <ColorZone id="colorDetails" />
           <DeleteZone />
         </Card>
       </div>
